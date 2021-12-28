@@ -31,17 +31,38 @@ int main()
 
 /* leetcode solution - O(n) both
   vector<int> minOperations(string boxes) {
-    vector<int> res(boxes.length()); 
-    for (int i = 0, ops = 0, cnt = 0; i < boxes.length(); ++i) {
-       res[i] += ops;
-       cnt += boxes[i] == '1' ? 1 : 0;
-       ops += cnt;
+        int n=boxes.length();
+        vector<int>res(n);
+        int last_cost=0, sum=boxes[0]-'0';
+        for(int i=1;i<n;i++){
+            res[i]+=sum+last_cost;
+            last_cost=res[i];
+            sum+=(boxes[i]-'0');
+        }
+        
+        last_cost=0,sum=boxes[n-1]-'0';
+        
+        for(int i=n-2;i>=0;i--){
+            res[i]+=sum+last_cost;
+            last_cost=(sum+last_cost);
+            sum+=(boxes[i]-'0');
+        }
+        return res;
     }
-    for (int i = boxes.length() - 1, ops = 0, cnt = 0; i >= 0; --i) {
-        res[i] += ops;
-        cnt += boxes[i] == '1' ? 1 : 0;
-        ops += cnt;
-    }
-    return res;
-}
+*/
+
+/*
+
+Here what we are doing is going through the array first from left to right and then right to left and for each position we are storing a prefix array
+sum[] which stores the total balls to be moved from 0th index to current ith index (ie. all elements to left), in a variable (here sum) and res stores 
+the operations needed to move all balls to ith index. Thus, res[i]= res[i-1]+ sum, gives minimum number of operations needed to move all balls from the 
+left indices.
+
+Similarily, we need to iterate from right to left and storing total balls in a variable (sum) and using it to find res[i], which is res[i]=res[i-1]+sum.
+
+For a given position i, for finding the cost to move balls from all places it makes sense we see the cost from 0 to i and then n-1 to i in backward
+direction rather than running an n^2 loop and here we get O(n) time.
+
+Time Complexity : O(N) due to the linear traversal from 1st element to last element & vice versa
+Space Complexity: O(N) due to the space used to store the prefix sum and ultimately the result.
 */
